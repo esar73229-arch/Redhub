@@ -84,6 +84,19 @@ input[type=range]{padding:0;border:0;background:none;accent-color:var(--rd)}
 button:disabled{opacity:.6;cursor:default}
 .coins{margin:0 0 10px}
 #mm{min-height:22px;margin:0 0 8px;font-weight:600;color:var(--rd)}
+#hud{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.5);color:#fff;font-weight:600;padding:6px 12px;border-radius:10px;pointer-events:none;white-space:pre-line}
+.item span{background:#cfd3da;border-radius:6px}
+.thumb b{width:38px;height:48px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:#fff1c9;border:3px solid var(--ink)}
+#tb{position:absolute;right:104px;bottom:24px;width:76px;height:76px;border-radius:50%;background:#ffc933;color:#151a33;touch-action:none;padding:0}
+#trb{position:absolute;top:10px;right:10px;padding:6px 12px}
+#tpn{position:absolute;top:56px;right:10px;width:230px;background:var(--sf);border:3px solid var(--ink);border-radius:12px;padding:12px;box-shadow:4px 4px 0 var(--ink)}
+#prb{position:absolute;top:10px;right:96px;padding:6px 12px}
+#ppn{position:absolute;top:56px;right:10px;width:250px;max-height:300px;overflow:auto;background:var(--sf);border:3px solid var(--ink);border-radius:12px;padding:12px;box-shadow:4px 4px 0 var(--ink)}
+.pr{display:flex;align-items:center;gap:6px;margin:4px 0;flex-wrap:wrap}
+.pr small{color:var(--mu);flex:1}
+.pr button,#ppn .chips button{padding:2px 8px;font-size:12px;box-shadow:2px 2px 0 var(--ink)}
+.pl{font-weight:700;margin-top:8px}
+.r0{color:#888}.r1{color:#4b8bff}.r2{color:#c15bff}.r3{color:#e0a800}
 .hide{display:none}
 .note{color:var(--mu);font-size:14px;margin-top:14px}
 </style>
@@ -102,12 +115,12 @@ button:disabled{opacity:.6;cursor:default}
 <section id="vj">
   <h1>Discover games.</h1>
   <p class="sub">Pick a game and play in your browser with the avatar you made.</p>
-  <div class="grid"><div class="card"><div class="thumb"><b></b></div><div class="in"><h3>Hub</h3><small>By RedBlock, 3D baseplate</small><button class="go" id="ph">Play</button></div></div></div>
+  <div class="grid"><div class="card"><div class="thumb"><b></b></div><div class="in"><h3>Throw Eggs for Animals</h3><small>By RedBlock, training, plots and 5 zones</small><button class="go" id="ph">Play</button></div></div></div>
 </section>
 
 <section id="va" class="hide"></section>
 
-<section id="vg" class="hide"><div class="bar"><button id="lv">Leave</button><span>Hub. Drag to look around.</span></div><div class="gw"><div id="cvh"></div><div id="joy"><i id="knob"></i></div><button id="jb">Jump</button></div></section>
+<section id="vg" class="hide"><div class="bar"><button id="lv">Leave</button><span>Drag to look around. Stand on the raised pad, then throw with E or the Throw button.</span></div><div class="gw"><div id="cvh"></div><div id="hud"></div><button id="prb">Pets</button><button id="trb">Train</button><div id="tpn" class="hide"></div><div id="ppn" class="hide"></div><div id="joy"><i id="knob"></i></div><button id="jb">Jump</button><button id="tb">Throw</button></div></section>
 
 <section id="vv" class="hide"></section>
 
@@ -214,7 +227,7 @@ function neck(id,c){
 }
 function back(id,c){
   var f='fill="'+c+'" '+K;
-  if(id==="sayap")return '<path d="M60 74 Q-6 14 4 112 Q32 100 60 112 Z" '+f+'/><path d="M140 74 Q206 14 196 112 Q168 100 140 112 Z" '+f+'/>';
+  if(id==="sayap")return '<path d="M60 72 C34 38 2 38 -6 68 C4 74 4 86 -4 96 C8 98 10 108 2 118 C26 116 44 110 60 106 Z" '+f+'/><path transform="matrix(-1 0 0 1 200 0)" d="M60 72 C34 38 2 38 -6 68 C4 74 4 86 -4 96 C8 98 10 108 2 118 C26 116 44 110 60 106 Z" '+f+'/>';
   if(id==="ransel")return '<rect x="52" y="72" width="96" height="62" rx="6" '+f+'/>';
   return '<rect x="54" y="62" width="92" height="130" rx="4" '+f+'/>';
 }
@@ -276,257 +289,4 @@ function drawAuth(){
     $("wa").innerHTML=avSVG(cur.avatar,false);
     el.querySelector("h2").textContent=cur.name;
     if(isOwner())el.querySelector("h2").insertAdjacentHTML("beforeend",BADGE);
-    el.querySelector("p").textContent=isOwner()?"Verified system account":"Joined "+new Date(cur.created).toLocaleDateString("en-US",{day:"numeric",month:"long",year:"numeric"});
-    $("out").onclick=function(){lsSet("rb_session","");cur=null;mode="masuk";header();show("a")};
-    return;
-  }
-  var reg=mode==="daftar";
-  el.innerHTML='<h1>'+(reg?"Create account.":"Log in.")+'</h1><p class="sub">'+(reg?"Choose a username and password to start playing on RedBlock.":"Log in with your username and password.")+'</p>'
-  +'<div class="panel"><div class="tabs"><button id="tm" class="'+(reg?"":"on")+'">Log in</button><button id="td" class="'+(reg?"on":"")+'">Sign up</button></div>'
-  +'<label for="u">Username</label><input id="u" maxlength="16" autocomplete="username" autocapitalize="off">'
-  +'<label for="p">Password</label><input id="p" type="password" autocomplete="'+(reg?"new-password":"current-password")+'">'
-  +(reg?'<label for="p2">Confirm password</label><input id="p2" type="password" autocomplete="new-password">':'')
-  +'<p id="msg" role="alert"></p><p style="margin:12px 0 0"><button class="go" id="ok">'+(reg?"Sign up":"Log in")+'</button></p></div>';
-  $("tm").onclick=function(){mode="masuk";drawAuth()};
-  $("td").onclick=function(){mode="daftar";drawAuth()};
-  $("ok").onclick=submit;
-  el.querySelectorAll("input").forEach(function(i){i.onkeydown=function(e){if(e.key==="Enter")submit()}});
-}
-
-async function submit(){
-  var name=$("u").value.trim(),pw=$("p").value,key=name.toLowerCase(),us=users();
-  if(!window.crypto||!crypto.subtle){say("This browser does not support secure password storage.");return}
-  try{
-    if(mode==="daftar"){
-      if(!/^[A-Za-z0-9_]{3,16}$/.test(name)){say("Username must be 3 to 16 characters: letters, numbers or underscore.");return}
-      if(key==="owner"){say("This username is reserved for a system account.");return}
-      if(pw.length<6){say("Password must be at least 6 characters.");return}
-      if(pw!==$("p2").value){say("Passwords do not match.");return}
-      if(us[key]){say("Username is already taken. Try another one.");return}
-      var s=newSalt();
-      us[key]={name:name,salt:s,hash:await hashPw(s,pw),avatar:clean(null),created:Date.now(),coins:500,owned:[]};
-      saveUsers(us);
-    }else{
-      if(key==="owner"){
-        if(await hashPw(OWNER_SALT,pw)!==OWNER_HASH){say("Wrong username or password.");return}
-        if(!us.owner){us.owner={name:"Owner",avatar:clean(null),created:Date.now()};saveUsers(us)}
-      }else{
-        var u=us[key];
-        if(!u||!u.hash||u.hash!==await hashPw(u.salt,pw)){say("Wrong username or password.");return}
-      }
-    }
-    lsSet("rb_session",key);
-    login(key);show(mode==="daftar"?"v":"j");
-  }catch(e){say("Something went wrong. Please try again.")}
-}
-function login(key){
-  var u=users()[key];
-  if(!u){cur=null;return}
-  cur={key:key,name:u.name,avatar:clean(u.avatar),created:u.created,coins:(typeof u.coins==="number"?u.coins:500),owned:(Array.isArray(u.owned)?u.owned.slice():ownedFrom(u.avatar))};
-  header();
-}
-
-/* Menu Avatar */
-var cat="badan",slot="shirt",mslot="all";
-var VB={head:"46 -22 108 88",torso:"16 52 168 100",legs:"36 132 128 96",back:"-6 -6 212 160"};
-var FREE={shirt:["none","polos"],pants:["none","jeans"],hair:["none","pendek"],hat:["none"],faceAcc:["none"],neck:["none"],back:["none"]};
-var BASE={shirt:40,pants:40,hair:60,hat:80,faceAcc:50,neck:70,back:150},SPEC={"hat:crown":250,"back:sayap":300};
-function price(s,id){return SPEC[s+":"+id]||BASE[s]}
-function free(s,id){return FREE[s].indexOf(id)>=0}
-function own(s,id){return free(s,id)||isOwner()||cur.owned.indexOf(s+":"+id)>=0}
-function ownedFrom(a){var o=[];a=clean(a);for(var s in a.items)if(!free(s,a.items[s]))o.push(s+":"+a.items[s]);return o}
-function saveAv(){var us=users(),u=us[cur.key];if(u){u.avatar=cur.avatar;u.coins=cur.coins;u.owned=cur.owned;saveUsers(us)}header()}
-function palBtns(at,c){return PAL.map(function(x){return '<button '+at+'="'+x+'" aria-label="Color '+x+'" style="background:'+x+'" class="'+(c===x?"sel":"")+'"></button>'}).join("")}
-function chips(at,l,c){return l.map(function(f){return '<button '+at+'="'+f[0]+'" class="'+(c===f[0]?"sel":"")+'">'+f[1]+'</button>'}).join("")}
-function bodyPane(a){
-  return '<section><h3>Skin tone</h3><div class="pal">'+SKIN.map(function(c){return '<button data-s="'+c+'" aria-label="Skin '+c+'" style="background:'+c+'" class="'+(a.head===c?"sel":"")+'"></button>'}).join("")+'</div></section>'
-  +'<section><h3>Body part colors</h3><div class="chips">'+chips("data-p",PARTS,sel)+'</div><div class="pal" style="margin-top:10px">'+palBtns("data-c",a[sel])+'</div></section>'
-  +'<section><h3>Face</h3><div class="chips">'+chips("data-f",FACES,a.face)+'</div></section>'
-  +'<section><h3>Scale</h3><label class="sl">Height <b>'+a.h+'%</b><input type="range" min="80" max="110" value="'+a.h+'" data-z="h"></label><label class="sl">Width <b>'+a.w+'%</b><input type="range" min="80" max="110" value="'+a.w+'" data-z="w"></label></section>';
-}
-function thumbs(sl){
-  var c=CAT[sl];
-  return '<div class="items">'+c.o.map(function(o){
-    var v=clean(cur.avatar);v.items[sl]=o[0];var ow=own(sl,o[0]);
-    return '<button class="item'+((cur.avatar.items[sl]||"none")===o[0]?" sel":"")+'" data-i="'+o[0]+'"><span>'+avSVG(v,false,VB[c.v])+'</span><small>'+o[1]+(ow?"":" ("+price(sl,o[0])+")")+'</small></button>';
-  }).join("")+'</div>';
-}
-function itemPane(a){
-  var sl=TABS[cat][1];if(sl.indexOf(slot)<0)slot=sl[0];
-  var h='<div class="chips" style="margin-bottom:12px">'+chips("data-sl",sl.map(function(s){return [s,CAT[s].n]}),slot)+'</div>'+thumbs(slot);
-  if((a.items[slot]||"none")!=="none")h+='<section style="margin-top:14px"><h3>Item color</h3><div class="pal">'+palBtns("data-k",a.cols[slot]||CAT[slot].c)+'</div></section>';
-  return h+'<p class="note">Items with a price are in the Marketplace.</p>';
-}
-function marketPane(){
-  var ids=Object.keys(CAT);
-  var h='<p class="coins">Balance: <b>'+(isOwner()?"Unlimited":cur.coins)+'</b> coins</p><div class="chips" style="margin-bottom:12px">'+chips("data-ms",[["all","All"]].concat(ids.map(function(s){return [s,CAT[s].n]})),mslot)+'</div><p id="mm" role="alert"></p><div class="items">';
-  ids.forEach(function(s){
-    if(mslot!=="all"&&mslot!==s)return;
-    CAT[s].o.forEach(function(o){
-      if(free(s,o[0]))return;
-      var v=clean(cur.avatar),ow=own(s,o[0]);v.items[s]=o[0];
-      h+='<div class="item"><span>'+avSVG(v,false,VB[CAT[s].v])+'</span><small>'+o[1]+'</small><button class="'+(ow?"":"go")+'" data-b="'+s+':'+o[0]+'"'+(ow?" disabled":"")+'>'+(ow?"Owned":price(s,o[0])+" coins")+'</button></div>';
-    });
-  });
-  return h+'</div>';
-}
-function drawAvatar(){
-  var el=$("vv");
-  if(!cur){
-    el.innerHTML='<h1>Avatar.</h1><p class="sub">Log in to save your avatar to your account.</p><div class="panel empty"><b></b><p style="margin-bottom:14px">You are not logged in.</p><button class="go" id="gl">Log in or sign up</button></div>';
-    $("gl").onclick=function(){show("a")};return;
-  }
-  var a=cur.avatar,h='<h1>R6 Avatar.</h1><p class="sub">Customize your body, clothes and accessories. Saved automatically. This is the avatar you play with.</p><div class="av"><div class="stage"><span class="tag">R6</span>'+avSVG(a,true)+'<div class="chips"><button id="rnd">Randomize</button><button id="rst">Reset</button></div></div><div class="ctl"><div class="tabs">';
-  for(var k in TABS)h+='<button data-t="'+k+'" class="'+(cat===k?"on":"")+'">'+TABS[k][0]+'</button>';
-  el.innerHTML=h+'</div>'+(cat==="badan"?bodyPane(a):cat==="market"?marketPane():itemPane(a))+'</div></div>';
-  function on(q,fn){el.querySelectorAll(q).forEach(function(n){n.onclick=function(){fn(n.dataset)}})}
-  function go(f){return function(d){f(d);saveAv();drawAvatar()}}
-  on("[data-t]",function(d){cat=d.t;drawAvatar()});
-  on("[data-sl]",function(d){slot=d.sl;drawAvatar()});
-  on("[data-ms]",function(d){mslot=d.ms;drawAvatar()});
-  on(".ctl [data-p]",function(d){sel=d.p;drawAvatar()});
-  on("[data-s]",go(function(d){["head","la","ra","ll","rl"].forEach(function(k){cur.avatar[k]=d.s})}));
-  on("[data-c]",go(function(d){cur.avatar[sel]=d.c}));
-  on("[data-f]",go(function(d){cur.avatar.face=d.f}));
-  on("[data-k]",go(function(d){cur.avatar.cols[slot]=d.k}));
-  on("[data-i]",function(d){
-    if(!own(slot,d.i)){cat="market";mslot=slot;drawAvatar();return}
-    cur.avatar.items[slot]=d.i;saveAv();drawAvatar();
-  });
-  on("[data-b]",function(d){
-    var p=d.b.split(":");
-    if(!CAT[p[0]]||!CAT[p[0]].o.some(function(o){return o[0]===p[1]}))return;
-    var pr=price(p[0],p[1]);
-    if(!isOwner()){
-      if(cur.coins<pr){drawAvatar();$("mm").textContent="Not enough coins.";return}
-      cur.coins-=pr;cur.owned.push(d.b);
-    }
-    saveAv();drawAvatar();$("mm").textContent="Purchased! Equip it in the Clothing or Accessories tab.";
-  });
-  el.querySelectorAll("[data-z]").forEach(function(n){
-    n.oninput=function(){cur.avatar[n.dataset.z]=+n.value;n.parentNode.querySelector("b").textContent=n.value+"%";el.querySelector(".stage svg").outerHTML=avSVG(cur.avatar,true)};
-    n.onchange=saveAv;
-  });
-  var st=el.querySelector(".stage");
-  function pick(e){var t=e.target.closest&&e.target.closest("[data-p]");if(t){sel=t.dataset.p;cat="badan";drawAvatar()}}
-  st.onclick=pick;
-  st.onkeydown=function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();pick(e)}};
-  $("rnd").onclick=function(){
-    var a=cur.avatar,r=function(l){return l[Math.floor(Math.random()*l.length)]},sk=r(SKIN);
-    ["head","la","ra","ll","rl"].forEach(function(k){a[k]=sk});
-    a.torso=r(PAL);a.face=r(FACES)[0];a.items={};a.cols={};
-    for(var s in CAT){a.items[s]=r(CAT[s].o.filter(function(o){return own(s,o[0])}))[0];a.cols[s]=r(PAL)}
-    saveAv();drawAvatar();
-  };
-  $("rst").onclick=function(){cur.avatar=clean(null);saveAv();drawAvatar()};
-}
-
-/* Game 3D: Hub */
-var GM=null,KS={},JV={x:0,z:0},JP=false,jid=null,dr=null;
-var KM={ArrowUp:"up",w:"up",ArrowDown:"down",s:"down",ArrowLeft:"left",a:"left",ArrowRight:"right",d:"right"," ":"jump"};
-function loadImg(src){return new Promise(function(res,rej){var i=new Image();i.onload=function(){res(i)};i.onerror=rej;i.src=src})}
-function stopGame(){
-  if(!GM)return;
-  cancelAnimationFrame(GM.raf);removeEventListener("keydown",GM.kd);removeEventListener("keyup",GM.ku);removeEventListener("resize",GM.rs);
-  if(GM.rd)GM.rd.dispose();$("cvh").innerHTML="";GM=null;KS={};
-}
-async function startGame(){
-  if(!window.THREE){alert("The 3D engine could not load. Check your connection and try again.");return}
-  stopGame();show("g");
-  var me=GM={raf:0,yaw:0,pit:.35,dist:14,vy:0,t:0,sw:0,last:performance.now()},S=4,a=clean(cur.avatar),cvh=$("cvh");
-  var flat=clean(a);flat.w=100;flat.h=100;
-  var img;
-  try{img=await loadImg("data:image/svg+xml;charset=utf-8,"+encodeURIComponent(avSVG(flat,false).replace("<svg ",'<svg width="'+220*S+'" height="'+258*S+'" ')))}catch(e){stopGame();return}
-  if(GM!==me)return;
-  var W=cvh.clientWidth,H=cvh.clientHeight,rd=new THREE.WebGLRenderer({antialias:true});
-  rd.setPixelRatio(Math.min(devicePixelRatio||1,2));rd.setSize(W,H);cvh.appendChild(rd.domElement);me.rd=rd;
-  var sc=new THREE.Scene(),cam=new THREE.PerspectiveCamera(65,W/H,.1,300),M=THREE.MeshLambertMaterial;
-  sc.background=new THREE.Color(0x87ceeb);sc.fog=new THREE.Fog(0x87ceeb,70,170);
-  sc.add(new THREE.HemisphereLight(0xffffff,0x667788,.95));
-  var sun=new THREE.DirectionalLight(0xffffff,.55);sun.position.set(30,60,20);sc.add(sun);
-  /* Baseplate */
-  var gc=document.createElement("canvas");gc.width=gc.height=128;var g2=gc.getContext("2d");
-  g2.fillStyle="#6f7378";g2.fillRect(0,0,128,128);g2.strokeStyle="#5a5e63";g2.lineWidth=4;g2.strokeRect(0,0,128,128);
-  var gt=new THREE.CanvasTexture(gc);gt.wrapS=gt.wrapT=THREE.RepeatWrapping;gt.repeat.set(50,50);
-  var fl=new THREE.Mesh(new THREE.BoxGeometry(200,1,200),new M({map:gt}));fl.position.y=-.5;sc.add(fl);
-  var pad=new THREE.Mesh(new THREE.BoxGeometry(8,.2,8),new M({color:0xd92b2b}));pad.position.y=.1;sc.add(pad);
-  var s2=document.createElement("canvas");s2.width=512;s2.height=128;var q=s2.getContext("2d");
-  q.fillStyle="#d92b2b";q.fillRect(0,0,512,128);q.fillStyle="#fff";q.font="700 64px sans-serif";q.textAlign="center";q.fillText("RedBlock Hub",256,84);
-  var sg=new THREE.Mesh(new THREE.PlaneGeometry(16,4),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(s2)}));sg.position.set(0,9,-24);sc.add(sg);
-  [-7,7].forEach(function(x){var p=new THREE.Mesh(new THREE.BoxGeometry(.6,9,.6),new M({color:0x444444}));p.position.set(x,4.5,-24.4);sc.add(p)});
-  /* Avatar R6 (same data as the Avatar menu) */
-  function mk(w,h,d,k,c){
-    var g=R[k],cv=document.createElement("canvas");cv.width=g[2]*S;cv.height=g[3]*S;
-    cv.getContext("2d").drawImage(img,(g[0]+10)*S,(g[1]+26)*S,g[2]*S,g[3]*S,0,0,cv.width,cv.height);
-    var sd=new M({color:c});
-    return new THREE.Mesh(new THREE.BoxGeometry(w,h,d),[sd,sd,sd,sd,new M({map:new THREE.CanvasTexture(cv)}),sd]);
-  }
-  function mat(s){return new M({color:a.cols[s]||CAT[s].c})}
-  function ad(p,geo,m,x,y,z){var o=new THREE.Mesh(geo,m);o.position.set(x,y,z);p.add(o);return o}
-  var pl=new THREE.Group(),av=new THREE.Group(),it=a.items,B=THREE.BoxGeometry;
-  var sh=it.shirt&&it.shirt!=="none"?(a.cols.shirt||CAT.shirt.c):a.torso,pn=it.pants&&it.pants!=="none"?(a.cols.pants||CAT.pants.c):null;
-  var tor=mk(2,2,1,"torso",sh);tor.position.y=3;av.add(tor);
-  var hd=mk(1.3,1.1,1.3,"head",a.head);hd.position.y=4.55;av.add(hd);
-  function limb(k,x,y,c){var g=new THREE.Group();g.position.set(x,y,0);var m=mk(1,2,1,k,c);m.position.y=-1;g.add(m);av.add(g);return g}
-  var L={la:limb("la",-1.5,4,it.shirt!=="none"&&it.shirt?sh:a.la),ra:limb("ra",1.5,4,it.shirt!=="none"&&it.shirt?sh:a.ra),ll:limb("ll",-.5,2,pn||a.ll),rl:limb("rl",.5,2,pn||a.rl)};
-  var hr=it.hair,ha=it.hat,bk=it.back;
-  if(hr==="pendek"||hr==="panjang"||hr==="cepol")ad(hd,new B(1.4,.35,1.4),mat("hair"),0,.6,0);
-  if(hr==="panjang")ad(hd,new B(1.4,1.5,.3),mat("hair"),0,-.2,-.6);
-  if(hr==="cepol")ad(hd,new THREE.SphereGeometry(.38,12,8),mat("hair"),0,1,0);
-  if(hr==="spiky")[-.4,0,.4].forEach(function(x){ad(hd,new THREE.ConeGeometry(.22,.7,4),mat("hair"),x,.9,0)});
-  if(ha==="cap"){ad(hd,new B(1.45,.4,1.45),mat("hat"),0,.6,0);ad(hd,new B(1.45,.1,.6),mat("hat"),0,.45,.9)}
-  if(ha==="party")ad(hd,new THREE.ConeGeometry(.6,1.4,16),mat("hat"),0,1.2,0);
-  if(ha==="crown")ad(hd,new THREE.CylinderGeometry(.7,.7,.5,5),mat("hat"),0,.8,0);
-  if(ha==="helm")ad(hd,new B(1.5,.85,1.5),mat("hat"),0,.55,0);
-  if(ha==="tinggi"){ad(hd,new THREE.CylinderGeometry(.85,.85,.1,16),mat("hat"),0,.6,0);ad(hd,new THREE.CylinderGeometry(.5,.5,1,12),mat("hat"),0,1.1,0)}
-  if(bk==="sayap")[-1,1].forEach(function(s){var w=ad(av,new B(.15,2.4,1.5),mat("back"),s*1.1,3.4,-.8);w.rotation.z=s*.35;w.rotation.y=s*.5});
-  if(bk==="ransel")ad(av,new B(1.8,1.8,.7),mat("back"),0,3,-.85);
-  if(bk==="jubah")ad(av,new B(1.9,3.6,.1),mat("back"),0,3,-.6);
-  av.scale.set(a.w/100,a.h/100,a.w/100);av.rotation.y=Math.PI;pl.add(av);
-  var nc=document.createElement("canvas");nc.width=256;nc.height=64;var n2=nc.getContext("2d"),nm=cur.name+(isOwner()?" \u2714":"");
-  n2.font="700 30px sans-serif";n2.textAlign="center";n2.strokeStyle="#000";n2.lineWidth=6;n2.fillStyle="#fff";n2.strokeText(nm,128,42);n2.fillText(nm,128,42);
-  var sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(nc),depthTest:false}));sp.scale.set(5,1.25,1);sp.position.y=5.6*a.h/100+1;pl.add(sp);
-  sc.add(pl);
-  /* Input and loop */
-  me.kd=function(e){var k=KM[e.key.length===1?e.key.toLowerCase():e.key];if(k){KS[k]=1;e.preventDefault()}};
-  me.ku=function(e){var k=KM[e.key.length===1?e.key.toLowerCase():e.key];if(k)KS[k]=0};
-  me.rs=function(){var w=cvh.clientWidth,h=cvh.clientHeight;rd.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix()};
-  addEventListener("keydown",me.kd);addEventListener("keyup",me.ku);addEventListener("resize",me.rs);
-  me.last=performance.now();
-  (function tick(now){
-    if(GM!==me)return;me.raf=requestAnimationFrame(tick);
-    var dt=Math.min(.05,(now-me.last)/1000);me.last=now;
-    var ix=(KS.right?1:0)-(KS.left?1:0)+JV.x,iz=(KS.up?1:0)-(KS.down?1:0)+JV.z,m=Math.hypot(ix,iz),y=me.yaw;
-    if(m>1){ix/=m;iz/=m;m=1}
-    var mx=-Math.sin(y)*iz+Math.cos(y)*ix,mz=-Math.cos(y)*iz-Math.sin(y)*ix,p=pl.position;
-    if(m>.05){p.x=Math.max(-95,Math.min(95,p.x+mx*16*dt));p.z=Math.max(-95,Math.min(95,p.z+mz*16*dt));av.rotation.y=Math.atan2(mx,mz);me.t+=dt*10}
-    me.sw+=((m>.05?1:0)-me.sw)*Math.min(1,dt*12);
-    var w=Math.sin(me.t)*.9*me.sw;L.la.rotation.x=w;L.ra.rotation.x=-w;L.ll.rotation.x=-w;L.rl.rotation.x=w;
-    if((JP||KS.jump)&&p.y<=.001)me.vy=50;JP=false;
-    me.vy-=196*dt;p.y+=me.vy*dt;if(p.y<0){p.y=0;me.vy=0}
-    var ty=p.y+3.6*a.h/100,cp=Math.cos(me.pit);
-    cam.position.set(p.x+Math.sin(y)*cp*me.dist,ty+Math.sin(me.pit)*me.dist,p.z+Math.cos(y)*cp*me.dist);cam.lookAt(p.x,ty,p.z);
-    rd.render(sc,cam);
-  })(performance.now());
-}
-(function(){
-  var joy=$("joy"),kn=$("knob"),cvh=$("cvh");
-  function jm(e){var r=joy.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),m=Math.hypot(dx,dy),k=m>45?45/m:1;dx*=k;dy*=k;JV.x=dx/45;JV.z=-dy/45;kn.style.transform="translate("+dx+"px,"+dy+"px)"}
-  function je(e){if(e.pointerId===jid){jid=null;JV.x=JV.z=0;kn.style.transform=""}}
-  joy.onpointerdown=function(e){jid=e.pointerId;joy.setPointerCapture(jid);jm(e)};
-  joy.onpointermove=function(e){if(e.pointerId===jid)jm(e)};
-  joy.onpointerup=joy.onpointercancel=je;
-  $("jb").onpointerdown=function(){JP=true};
-  cvh.onpointerdown=function(e){dr={x:e.clientX,y:e.clientY};cvh.setPointerCapture(e.pointerId)};
-  cvh.onpointermove=function(e){if(!dr||!GM)return;GM.yaw-=(e.clientX-dr.x)*.006;GM.pit=Math.max(.05,Math.min(1.3,GM.pit+(e.clientY-dr.y)*.005));dr={x:e.clientX,y:e.clientY}};
-  cvh.onpointerup=cvh.onpointercancel=function(){dr=null};
-  cvh.onwheel=function(e){if(GM){GM.dist=Math.max(5,Math.min(30,GM.dist+e.deltaY*.01));e.preventDefault()}};
-  $("ph").onclick=startGame;
-  $("lv").onclick=function(){show("j")};
-})();
-
-/* Mulai */
-(function(){var k=lsGet("rb_session");if(k)login(k);header();show(cur?"j":"a")})();
-</script>
-</body>
-</html>
+    el.querySelector("p").textContent=isOwner()?"Verified system account":"
